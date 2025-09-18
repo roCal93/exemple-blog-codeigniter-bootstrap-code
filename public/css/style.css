@@ -1,0 +1,51 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.card-blog {
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.card-blog:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.article-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.article-meta {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.article-content-textarea {
+    min-height: 300px;
+    resize: vertical; 
+}
+
+.form-text ul {
+    font-size: 0.875rem;
+    padding-left: 1.2rem;
+}
+.form-text ul li {
+    margin-bottom: 0.2rem;
+}
+.invalid-feedback {
+    display: block;
+}
