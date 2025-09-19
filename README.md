@@ -48,7 +48,7 @@ Un blog moderne développé avec CodeIgniter 4 et Bootstrap, conçu pour démont
 
 | Email                    | Mot de passe | Rôle   |
 |--------------------------|--------------|--------|
-| romaincalmelet@gmail.com | 1234         | Admin  |
+| romaincalmelet@gmail.com | Password1@   | Admin  |
 | josh@gmail.com           | qwertz       | User   |
 | ben@gmail.com            | Salut-salu1  | User   |
 
