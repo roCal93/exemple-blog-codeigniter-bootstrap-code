@@ -1,0 +1,38 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+<div class="form-container w-100">
+    {% if validation %}
+        <div class="alert alert-danger">
+            {% for error in validation.getErrors() %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h1 class="mb-4">{{ article  ? 'Modifier l\'article' : 'Créer un article' }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ article ? route_to('updateIndex', article.id) : route_to('postIndex') }}" method="post">
+                <input type="hidden" name="{{ csrf_token() }}" value="{{ csrf_hash() }}" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Titre :</label>
+                    <input type="text" name="title" id="title" value="{{ article ? article.title : '' }}" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Contenu :</label>
+                    <textarea id="content" name="content" class="form-control article-content-textarea" rows="12" required>{{ article ? article.content : '' }}</textarea>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="state" id="state" value="1" class="form-check-input" {{ article and article.state ? 'checked' : '' }}>
+                    <label for="state" class="form-check-label">Publier directement</label>
+                </div>
+                <div class="d-grid">
+                <button type="submit" class="btn btn-primary">{{ article ? 'Modifier l\'article' : 'Créer un article' }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

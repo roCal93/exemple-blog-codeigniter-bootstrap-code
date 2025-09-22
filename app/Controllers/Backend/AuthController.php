@@ -17,7 +17,8 @@ class AuthController extends BaseController
     // Display the login form
     public function login()
     {
-        return view('login');
+        $data['error'] = session()->getFlashdata('error');
+        return $this->renderTwig('login.twig', $data);
     }
 
     // Handle user authentication
@@ -83,7 +84,13 @@ class AuthController extends BaseController
     // Display the registration form
     public function register()
     {
-        return view('register');
+        $data = [
+            'old_name' => old('name'),
+            'old_email' => old('email'),
+            'validation' => session()->getFlashdata('validation'),
+            'error' => session()->getFlashdata('error')
+        ];
+        return $this->renderTwig('register.twig', $data);
     }
 
     // Create a new user account
@@ -167,8 +174,15 @@ class AuthController extends BaseController
         if ($currentUser && $currentUser['role'] === 'admin') {
             $allUsers = $model->findAll();
         }
-        
-        return view('userPage', ['currentUser' => $currentUser, 'allUsers' => $allUsers]);
+        $data = [
+            'currentUser' => $currentUser,
+            'allUsers' => $allUsers,
+            'errors' => session()->getFlashdata('error'),
+            'success' => session()->getFlashdata('success'),
+            'old_email' => old('email'),
+            'old_name' => old('name'),
+        ];
+        return $this->renderTwig('userPage.twig', $data);
     }
     
     // Update user profile

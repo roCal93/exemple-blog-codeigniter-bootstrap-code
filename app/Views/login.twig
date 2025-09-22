@@ -1,18 +1,20 @@
-<?= view('header') ?>
+{% extends 'base.twig' %}
+
+{% block content %}
 
 <div class="form-container">
     <h1 class="mb-4">Connexion</h1>
     
-    <?php if (session()->getFlashdata('error')): ?>
+    {% if error %}
         <div class="alert alert-danger">
-            <?= session()->getFlashdata('error') ?>
+            {{ error }}
         </div>
-    <?php endif; ?>
+    {% endif %}
     
     <div class="card">
         <div class="card-body">
-            <form action="<?= route_to('authIndex'); ?>" method="post">
-                <?= csrf_field() ?>
+            <form action="{{ route_to('authIndex') }}" method="post">
+                <input type="hidden" name="{{ csrf_token() }}" value="{{ csrf_hash() }}" />
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" required autocomplete="username">
@@ -27,9 +29,9 @@
             </form>
         </div>
         <div class="card-footer text-center">
-            Pas encore de compte ? <a href="<?= route_to('registerIndex'); ?>">S'inscrire</a>
+            Pas encore de compte ? <a href="{{ route_to('registerIndex') }}">S'inscrire</a>
         </div>
     </div>
 </div>
 
-<?= view('footer') ?>
+{% endblock %}

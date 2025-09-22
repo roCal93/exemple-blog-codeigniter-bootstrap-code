@@ -2,7 +2,9 @@
 
 namespace App\Controllers\Frontend;
 
-class ArticleController extends BaseFrontendController
+use App\Controllers\BaseController;
+
+class ArticleController extends BaseController
 {
     public function article($slug)
     {
@@ -25,15 +27,20 @@ class ArticleController extends BaseFrontendController
         // Get the author's name
         $author = $this->userModel->find($article['user_id']);
         $authorName = $author ? $author['name'] : 'Unknown author';
+        
+        // Format the date 
+        $formattedDate = ucfirst($this->formatter->format(strtotime($article['created_at'])));
+        
         // Prepare data for the view
         $data = [
             'new' => $article,
-            'formatter' => $this->getFormatterForDate(\IntlDateFormatter::LONG),
+            'formattedDate' => $formattedDate,
             'author' => $authorName,
             'currentUser' => $this->currentUser,
             'isOwner' => $isOwner,
             'isAdmin' => $this->isAdmin
         ];
-        return view('article', $data);
+
+        return $this->renderTwig('article.twig', $data);
     }
 }

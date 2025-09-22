@@ -74,7 +74,9 @@ class EditArticleController extends BaseController
             $data['article'] = $article;
         }
 
-        return view('createArticle', $data);
+        $data['error'] = session()->getFlashdata('error');
+        $data['validation'] = session()->getFlashdata('validation');
+        return $this->renderTwig('createArticle.twig', $data);
     }
 
     // Create a new article

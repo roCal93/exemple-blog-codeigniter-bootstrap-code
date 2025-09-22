@@ -2,7 +2,9 @@
 
 namespace App\Controllers\Frontend;
 
-class HomeController extends BaseFrontendController
+use App\Controllers\BaseController;
+
+class HomeController extends BaseController
 {
     // Constant for the number of articles to display on the home page
     private const HOME_ARTICLES_LIMIT = 2;
@@ -13,12 +15,18 @@ class HomeController extends BaseFrontendController
         $news = $this->newsModel->news(self::HOME_ARTICLES_LIMIT, true);
         // Add author names to the news articles
         $this->addAuthorsToNews($news);
-        
-        // Pass data to the home view
-        return view('home', [
+
+        // Format dates for each article
+        foreach ($news as &$new) {
+            $new['formattedDate'] = ucfirst($this->formatter->format(strtotime($new['created_at'])));
+        }
+
+        //Show Page with Datas using Twig
+        $data = [
             'news' => $news,
-            'formatter' => $this->formatter,
             'currentUser' => $this->currentUser
-        ]);
+        ];
+
+        return $this->renderTwig('home.twig', $data);
     }
 }

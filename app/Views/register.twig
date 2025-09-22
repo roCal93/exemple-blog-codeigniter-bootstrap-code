@@ -1,0 +1,93 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+<div class="form-container w-100">
+    <h1 class="mb-4">Rejoins-nous</h1>
+    <div class="card">
+        <div class="card-body">
+            {% if error %}
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        {% for field, message in error %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <form action="{{ route_to('postUserIndex') }}" method="post">
+            <input type="hidden" name="{{ csrf_token() }}" value="{{ csrf_hash() }}" />
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email *</label>
+                    <input type="email" id="email" name="email" class="form-control {{ error.email ? 'is-invalid' : '' }}" 
+                           value="{{ old_email }}" required autocomplete="username">
+                    {% if error.email %}
+                        <div class="invalid-feedback">
+                            {{ error.email }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom *</label>
+                    <input type="text" id="name" name="name" class="form-control {{ error.name ? 'is-invalid' : '' }}" 
+                           value="{{ old_name }}" required>
+                    {% if error.name %}
+                        <div class="invalid-feedback">
+                            {{ error.name }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mot de passe *</label>
+                    <input type="password" id="password" name="password" class="form-control {{ error.password ? 'is-invalid' : '' }}" 
+                           required autocomplete="new-password" minlength="8">
+                    {% if error.password %}
+                        <div class="invalid-feedback">
+                            {{ error.password }}
+                        </div>
+                    {% endif %}
+                    <div class="form-text">
+                        <strong>Exigences du mot de passe :</strong>
+                        <ul class="mb-0 mt-1">
+                            <li>Au moins 8 caractères</li>
+                            <li>Une lettre majuscule (A-Z)</li>
+                            <li>Une lettre minuscule (a-z)</li>
+                            <li>Un chiffre (0-9)</li>
+                            <li>Un caractère spécial (@$!%*?&-_)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="confirm_password" class="form-label">Confirmer le mot de passe *</label>
+                    <input type="password" id="confirm_password" name="confirm_password" 
+                           class="form-control {{ error.confirm_password ? 'is-invalid' : '' }}" 
+                           required autocomplete="new-password">
+                    {% if error.confirm_password %}
+                        <div class="invalid-feedback">
+                            {{ error.confirm_password }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        S'inscrire
+                    </button>
+                </div>
+            </form>
+            
+            <div class="text-center">
+                <small class="text-muted">
+                    Déjà un compte ? <a href="{{ route_to('loginIndex') }}">Se connecter</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

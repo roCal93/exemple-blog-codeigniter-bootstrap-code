@@ -2,7 +2,9 @@
 
 namespace App\Controllers\Frontend;
 
-class BlogController extends BaseFrontendController
+use App\Controllers\BaseController;
+
+class BlogController extends BaseController
 {
     public function index()
     {
@@ -20,22 +22,28 @@ class BlogController extends BaseFrontendController
         // Add author names to the news articles
         $this->addAuthorsToNews($news);
         
+       // Format dates for each article
+        foreach ($news as &$new) {
+            $new['formattedDate'] = ucfirst($this->formatter->format(strtotime($new['created_at'])));
+        }
+        
         // Get list of authors based on user login status
         $authors = $this->newsModel->getAuthors($this->currentUserId);
         
         // Determine message if no articles are found
         $noArticlesMessage = $this->getNoArticlesMessage($news, $selectedAuthor, $authors);
         
-        // Pass data to the blog view
-        return view('blog', [
+        // Prepare data for Twig template
+        $data = [
             'news' => $news,
-            'formatter' => $this->formatter,
             'currentOrder' => $order,
             'authors' => $authors,
             'selectedAuthor' => $selectedAuthor,
             'currentUser' => $this->currentUser,
             'noArticlesMessage' => $noArticlesMessage
-        ]);
+        ];
+
+        return $this->renderTwig('blog.twig', $data);
     }
 
     private function getNoArticlesMessage($news, $selectedAuthor, $authors)
