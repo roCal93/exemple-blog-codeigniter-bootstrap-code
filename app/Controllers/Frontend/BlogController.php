@@ -2,9 +2,7 @@
 
 namespace App\Controllers\Frontend;
 
-use App\Controllers\BaseController;
-
-class BlogController extends BaseController
+class BlogController extends BaseFrontendController
 {
     public function index()
     {

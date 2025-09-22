@@ -2,9 +2,7 @@
 
 namespace App\Controllers\Frontend;
 
-use App\Controllers\BaseController;
-
-class HomeController extends BaseController
+class HomeController extends BaseFrontendController
 {
     // Constant for the number of articles to display on the home page
     private const HOME_ARTICLES_LIMIT = 2;

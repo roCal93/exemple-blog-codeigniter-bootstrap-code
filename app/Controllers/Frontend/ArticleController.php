@@ -2,9 +2,7 @@
 
 namespace App\Controllers\Frontend;
 
-use App\Controllers\BaseController;
-
-class ArticleController extends BaseController
+class ArticleController extends BaseFrontendController
 {
     public function article($slug)
     {
