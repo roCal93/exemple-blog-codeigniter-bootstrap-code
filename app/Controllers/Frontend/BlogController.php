@@ -7,8 +7,8 @@ class BlogController extends BaseFrontendController
     public function index()
     {
         // Get query parameters for order and author filter
-        $order = $this->request->getGet('order') ?? 'DESC';
-        $selectedAuthor = $this->request->getGet('author') ?? null;
+        $order = esc($this->request->getGet('order')) ?? 'DESC';
+        $selectedAuthor = esc($this->request->getGet('author')) ?? null;
         
         // Validate order parameter to ensure it's ASC or DESC
         if (!in_array($order, ['ASC', 'DESC'])) {
@@ -16,7 +16,7 @@ class BlogController extends BaseFrontendController
         }
         
         // Retrieve visible articles based on user permissions and filters
-        $news = $this->newsModel->getVisibleArticles($this->currentUserId, $this->isAdmin, $order, $selectedAuthor);
+        $news = $this->getNewsModel()->getVisibleArticles($this->currentUserId, $this->isAdmin, $order, $selectedAuthor);
         // Add author names to the news articles
         $this->addAuthorsToNews($news);
         
@@ -26,7 +26,7 @@ class BlogController extends BaseFrontendController
         }
         
         // Get list of authors based on user login status
-        $authors = $this->newsModel->getAuthors($this->currentUserId);
+        $authors = $this->getNewsModel()->getAuthors($this->currentUserId);
         
         // Determine message if no articles are found
         $noArticlesMessage = $this->getNoArticlesMessage($news, $selectedAuthor, $authors);
@@ -41,7 +41,7 @@ class BlogController extends BaseFrontendController
             'noArticlesMessage' => $noArticlesMessage
         ];
 
-        return $this->renderTwig('blog.twig', $data);
+        return twig(true, true, false)->render('blog.twig', $data);
     }
 
     private function getNoArticlesMessage($news, $selectedAuthor, $authors)

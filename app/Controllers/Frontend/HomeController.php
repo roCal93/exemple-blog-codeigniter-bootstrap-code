@@ -10,7 +10,7 @@ class HomeController extends BaseFrontendController
     public function index()
     {
         // Retrieve the latest published articles with the defined limit
-        $news = $this->newsModel->news(self::HOME_ARTICLES_LIMIT, true);
+        $news = $this->getNewsModel()->news(self::HOME_ARTICLES_LIMIT, true);
         // Add author names to the news articles
         $this->addAuthorsToNews($news);
 
@@ -25,6 +25,6 @@ class HomeController extends BaseFrontendController
             'currentUser' => $this->currentUser
         ];
 
-        return $this->renderTwig('home.twig', $data);
+        return twig(true, true, false)->render('home.twig', $data);
     }
 }

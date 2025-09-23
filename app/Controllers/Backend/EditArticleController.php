@@ -6,13 +6,25 @@ use App\Controllers\BaseController;
 
 class EditArticleController extends BaseController
 {
+    private $NewsModel;
+    private $UserModel;
+
+    private function getNewsModel()
+    {
+        return $this->NewsModel ??= new NewsModel();
+    }
+
+    private function getUserModel()
+    {
+        return $this->UserModel ??= new UserModel();
+    }
+
     // Check if the current user is an admin
     private function isAdmin()
     {
         $userId = session()->get('user_id');
         if (!$userId) return false;
-        
-        $userModel = new UserModel();
+        $userModel = $this->getUserModel();
         $user = $userModel->find($userId);
         return $user && $user['role'] === 'admin';
     }
@@ -26,13 +38,11 @@ class EditArticleController extends BaseController
     // Check access permissions and article existence
     private function checkAccess($newsId = null)
     {
-        $userId = session()->get('user_id');
-        if (!$userId) {
-            return redirect()->route('loginIndex')->with('error', 'Vous devez être connecté pour accéder à cette page.');
-        }
-        
         if ($newsId) {
-            $model = new NewsModel();
+            /**
+             * ℹ️ A revoir seul me NewsModel doit faire ce travail dans le fichier Model non dans le controller M-V-C First
+             */
+            $model = $this->getNewsModel();
             $article = $model->find($newsId);
             if (!$article) {
                 return redirect()->route('blogIndex')->with('error', 'Article non trouvé.');
@@ -69,14 +79,14 @@ class EditArticleController extends BaseController
 
         $data = [];
         if ($id) {
-            $model = new NewsModel();
+            $model = $this->getNewsModel();
             $article = $model->find($id);
             $data['article'] = $article;
         }
 
         $data['error'] = session()->getFlashdata('error');
         $data['validation'] = session()->getFlashdata('validation');
-        return $this->renderTwig('createArticle.twig', $data);
+        return twig(false, false, false)->render('createArticle.twig', $data);
     }
 
     // Create a new article
@@ -88,8 +98,8 @@ class EditArticleController extends BaseController
         $redirect = $this->validateArticleData();
         if ($redirect) return $redirect;
 
-    $model = new NewsModel();
-    $data = $this->request->getPost();
+    $model = $this->getNewsModel();
+    $data = esc($this->request->getPost());
     $data['user_id'] = session()->get('user_id');
     $data['state'] = $this->request->getPost('state') ? 1 : 0;
         
@@ -111,8 +121,8 @@ class EditArticleController extends BaseController
         $redirect = $this->validateArticleData();
         if ($redirect) return $redirect;
 
-    $model = new NewsModel();
-    $data = $this->request->getPost();
+    $model = $this->getNewsModel();
+    $data = esc($this->request->getPost()); 
     $data['state'] = $this->request->getPost('state') ? 1 : 0;
         
         try {
@@ -133,8 +143,7 @@ class EditArticleController extends BaseController
     {
         $redirect = $this->checkAccess($newsId);
         if ($redirect) return $redirect;
-        
-        $model = new NewsModel();
+        $model = $this->getNewsModel();
         
         try {
             if ($model->deleteNews($newsId)) {
@@ -153,8 +162,7 @@ class EditArticleController extends BaseController
     {
         $redirect = $this->checkAccess($newsId);
         if ($redirect) return $redirect;
-        
-        $model = new NewsModel();
+        $model = $this->getNewsModel();
         
         try {
             if ($model->updateState($newsId)) {

@@ -17,15 +17,24 @@ class BaseFrontendController extends BaseController
     protected $currentUserId;
     protected $isAdmin;
 
-    // Constructor to initialize models, formatter, and current user data
+    // Optimized model getters - lazy loading pattern
+    protected function getNewsModel()
+    {
+        return $this->newsModel ??= new NewsModel();
+    }
+
+    protected function getUserModel()
+    {
+        return $this->userModel ??= new UserModel();
+    }
+
+    // Constructor to initialize formatter and current user data
     public function __construct()
     {
-        $this->newsModel = new NewsModel();
-        $this->userModel = new UserModel();
         $this->formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
         
-        $this->currentUserId = session()->get('user_id');
-        $this->currentUser = $this->currentUserId ? $this->userModel->find($this->currentUserId) : null;
+        $this->currentUserId = session('user_id');
+        $this->currentUser = $this->currentUserId ? $this->getUserModel()->find($this->currentUserId) : null;
         $this->isAdmin = $this->currentUser && $this->currentUser['role'] === 'admin';
     }
 
@@ -41,7 +50,7 @@ class BaseFrontendController extends BaseController
             $userId = $new['user_id'] ?? null;
             
             // Find author and set name with fallback
-            $author = $userId ? $this->userModel->find($userId) : null;
+            $author = $userId ? $this->getUserModel()->find($userId) : null;
             $authorName = $author ? ($author['name'] ?? 'Auteur inconnu') : 'Auteur inconnu';
 
             // Assign author name back to the news item

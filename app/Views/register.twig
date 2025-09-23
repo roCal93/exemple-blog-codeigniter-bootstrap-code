@@ -8,11 +8,15 @@
         <div class="card-body">
             {% if error %}
                 <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        {% for field, message in error %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
+                    {% if error.general %}
+                        <div>{{ error.general }}</div>
+                    {% else %}
+                        <ul class="mb-0">
+                            {% for field, message in error %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             {% endif %}
             

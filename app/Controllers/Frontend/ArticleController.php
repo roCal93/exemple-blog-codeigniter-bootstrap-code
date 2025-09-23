@@ -9,7 +9,7 @@ class ArticleController extends BaseFrontendController
         // Secure the slug
         $slug = esc($slug);
         // Find the article by its slug
-        $article = $this->newsModel->where('slug', $slug)->first();
+        $article = $this->getNewsModel()->where('slug', $slug)->first();
         if (!$article) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
@@ -23,7 +23,7 @@ class ArticleController extends BaseFrontendController
         // Determine if the current user is the owner
         $isOwner = $this->currentUserId == $article['user_id'];
         // Get the author's name
-        $author = $this->userModel->find($article['user_id']);
+        $author = $this->getUserModel()->find($article['user_id']);
         $authorName = $author ? $author['name'] : 'Unknown author';
         
         // Format the date 
@@ -39,6 +39,6 @@ class ArticleController extends BaseFrontendController
             'isAdmin' => $this->isAdmin
         ];
 
-        return $this->renderTwig('article.twig', $data);
+        return twig(true, true, false)->render('article.twig', $data);
     }
 }

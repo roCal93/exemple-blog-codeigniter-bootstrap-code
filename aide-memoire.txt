@@ -1,0 +1,29 @@
+- Eviter les includes twig au maxi quand c'est possible : perte de performances. (fait)
+- Tu a commencer a utilisé le filtre AUTH mais tu ne l'applique pas dans tes routes.. un filtre ne fera q'une vérification pour toutes les routes (fait)
+- tu n'utilise pas assez esc ou htmlspecialchars ou les regles codeigniter rules/validations (sans sa c'est l'ouverture au hacking :/ ) (fait)
+- Pour crée des antispam/forcebrute tu peux utilisé (throttle, c'est un antispam pret de CI 4.6) (fait)
+- Attention tu utilise trop NewModel instancié directement en function de ton controller voici une méthode plus efficace et robuste et qui sera appelé
+a la demande uniquement donc optimisé et secure. (fait)
+
+<?php
+/**
+ * BlogController
+ */
+namespace App\Controllers;
+
+use App\Models\NewsModel;
+
+class BlogController extends BaseController
+{
+    private $NewsModel;
+
+    private function getNewsModel()
+    {
+        return $this->NewsModel ??= new NewsModel();
+    }
+
+    public function SinglePost($slug)
+    {
+        return $this->getNewsModel()->getSingleNews(esc($slug));
+    }
+}

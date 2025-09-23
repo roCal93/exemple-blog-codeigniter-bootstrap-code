@@ -1,0 +1,16 @@
+J'ai supprimé les includes et directement intégré mon header et footer a mon base.twig.
+
+J'ai supprimé la vérifications d'authentification redondantes dans le controller EditArticleController (le filtre AUTH s'en charge déjà dans les routes).
+
+Dans EditArticleController, ajout de esc() sur $this->request->getPost() dans les méthodes create() et update().
+
+Dans AuthController, dans la fonction deleteUser() ajout de esc() sur les données POST de confirmation.
+
+Mise en place du système de validation codeIgniter avec les règle :
+required|valid_email|is_unique[users.email] pour l'email
+required|matches[password] pour la confirmation
+required|min_length[2]|max_length[100] pour le nom
+
+Mise en place du throttler dans AuthController
+
+Mise en place de getNewsModel et getUserModel pour crée les modèles qu'une fois par controller 

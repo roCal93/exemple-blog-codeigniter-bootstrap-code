@@ -55,17 +55,5 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = service('session');
     }
-
-    /**
-     * Render a Twig view
-     *
-     * @param string $view
-     * @param array $data
-     * @return string
-     */
-    protected function renderTwig($view, $data = [])
-    {
-        $twig = twig(true, true, false);
-        return $twig->render($view, $data);
-    }
+    
 }
